@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  crawler:
+    build:
+      context: crawler
+      dockerfile: Dockerfile
+
+
