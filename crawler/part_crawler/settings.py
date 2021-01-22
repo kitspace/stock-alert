@@ -16,13 +16,15 @@ NEWSPIDER_MODULE = 'part_crawler.spiders'
 
 
 ITEM_PIPELINES = {
-    'scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500
+    'part_crawler.scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500
 }
 
 ELASTICSEARCH_SERVERS = ['http://172.17.0.1:9200']
 ELASTICSEARCH_INDEX = 'scrapy'
 ELASTICSEARCH_INDEX_DATE_FORMAT = '%Y-%m'
 ELASTICSEARCH_TYPE = 'items'
+ELASTICSEARCH_USERNAME = 'admin'
+ELASTICSEARCH_PASSWORD = 'admin'
 
 ELASTICSEARCH_UNIQ_KEY = 'sku'
 
