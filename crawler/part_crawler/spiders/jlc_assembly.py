@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import xlrd
+import logging
 
 expected_headings = [
-    "LCSC Part",
-    "MFR.Part",
-    "First Category",
-    "Second Category",
-    "Package",
-    "Solder Joint",
-    "Manufacturer",
-    "Library Type",
+    "LCSC Part",       #0
+    "First Category",  #1
+    "Second Category", #2
+    "MFR.Part",        #3
+    "Package",         #4
+    "Solder Joint",    #5
+    "Manufacturer",    #6
+    "Library Type",    #7
+    "Description",     #8
+    "Datasheet",       #9
+    "Price",           #10
+    "Stock",           #11
 ]
 
 
@@ -25,18 +30,15 @@ class JlcAssemblySpider(scrapy.Spider):
         rows = sheet.get_rows()
 
         # make sure the columns haven't changed
-        headings = next(rows)
+        headings = list(next(rows))
         assert [h.value for h in headings] == expected_headings
 
-        for row in rows:
-            r = [x.value for x in row]
-            yield {
-                "sku": r[0],
-                "search": r[1],
-                "category": r[2],
-                "secondary_category": r[3],
-                "package": r[4],
-                "number_of_solder_joints": int(r[5]),
-                "manufacturer": r[6],
-                "jlc_assembly_type": r[7],
-            }
+        row = next(rows)
+        r = [x.value for x in row]
+        yield {
+            "vendor": "jlc_assembly",
+            "sku": r[0],
+            "description": r[8],
+            "stock": r[11],
+        }
+

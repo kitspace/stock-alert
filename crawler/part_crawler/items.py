@@ -8,7 +8,8 @@
 import scrapy
 
 
-class GenericPartsItem(scrapy.Item):
+class Part(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    vendor = scrapy.Field()
+    sku = scrapy.Field()
