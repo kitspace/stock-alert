@@ -13,3 +13,5 @@ class Part(scrapy.Item):
     # name = scrapy.Field()
     vendor = scrapy.Field()
     sku = scrapy.Field()
+    description = scrapy.Field()
+    stock = scrapy.Field(serializer=int)

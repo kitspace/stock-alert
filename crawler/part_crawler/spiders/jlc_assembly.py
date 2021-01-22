@@ -2,6 +2,7 @@
 import scrapy
 import xlrd
 import logging
+from part_crawler.items import Part
 
 expected_headings = [
     "LCSC Part",       #0
@@ -35,10 +36,5 @@ class JlcAssemblySpider(scrapy.Spider):
 
         row = next(rows)
         r = [x.value for x in row]
-        yield {
-            "vendor": "jlc_assembly",
-            "sku": r[0],
-            "description": r[8],
-            "stock": r[11],
-        }
+        yield Part(vendor="jlc_assembly", sku=r[0], description=r[8], stock=int(r[11]))
 
