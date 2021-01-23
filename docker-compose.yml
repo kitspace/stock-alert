@@ -7,10 +7,40 @@ services:
       dockerfile: Dockerfile
     volumes:
       - './crawler:/app'
-  elasticsearch:
+
+  # only one eleasticsearch node for now but we can expand to more in the future
+  es01:
     image: 'amazon/opendistro-for-elasticsearch:1.12.0'
     environment:
       - 'discovery.type=single-node'
+      # along with the memlock settings below, disables swapping
+      - 'bootstrap.memory_lock=true'
+      # minimum and maximum Java heap size, recommend setting both to 50% of
+      # system RAM
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        # maximum number of open files for the Elasticsearch user, set to at
+        # least 65536 on modern systems
+        soft: 65536
+        hard: 65536
     ports:
       - '9200:9200'
-      - '9300:9300'
+      # required for Performance Analyzer
+      - '9600:9600'
+    volumes:
+      - es01-data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: 'amazon/opendistro-for-elasticsearch-kibana:1.12.0'
+    ports:
+      - '5601:5601'
+    environment:
+      ELASTICSEARCH_URL: https://es01:9200
+      ELASTICSEARCH_HOSTS: https://es01:9200
+
+volumes:
+  es01-data:
