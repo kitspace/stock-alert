@@ -131,7 +131,7 @@ class ElasticSearchPipeline(object):
         index_action = {
             '_index': index_name,
             '_type': self.settings['ELASTICSEARCH_TYPE'],
-            '_source': dict(item)
+            '_source': dict(**item, **{'timestamp': datetime.now()})
         }
 
         if self.settings['ELASTICSEARCH_UNIQ_KEY'] is not None:
