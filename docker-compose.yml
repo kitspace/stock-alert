@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - './crawler:/app'
+      - './images:/images'
 
   # only one eleasticsearch node for now but we can expand to more in the future
   es01:

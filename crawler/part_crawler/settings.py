@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Scrapy settings for part_crawler project
 #
 # For simplicity, this file contains only settings considered important or
@@ -16,8 +14,11 @@ NEWSPIDER_MODULE = 'part_crawler.spiders'
 
 
 ITEM_PIPELINES = {
-    'part_crawler.scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500
+    'scrapy.pipelines.images.ImagesPipeline': 1,
+    'part_crawler.scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500,
 }
+
+IMAGES_STORE = './images'
 
 ELASTICSEARCH_SERVERS = ['http://172.17.0.1:9200']
 ELASTICSEARCH_INDEX = 'scrapy'
