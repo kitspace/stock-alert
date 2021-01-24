@@ -45,6 +45,11 @@ class ElasticSearchPipeline(object):
         for required_setting in required_settings:
             validate_setting(required_setting)
 
+        if 'ELASTICSEARCH_MERGE' in settings and settings['ELASTICSEARCH_MERGE']:
+            if 'ELASTICSEARCH_UNIQ_KEY' not in settings:
+                raise InvalidSettingsException('ELASTICSEARCH_UNIQ_KEY is required when using ' + \
+                                               'ELASTICSEARCH_MERGE, but it is not defined in settings.py')
+
     @classmethod
     def init_es_client(cls, crawler_settings):
         auth_type = crawler_settings.get('ELASTICSEARCH_AUTH')
@@ -128,11 +133,23 @@ class ElasticSearchPipeline(object):
         elif index_suffix_key:
             index_name += "-" + index_suffix_key
 
-        index_action = {
-            '_index': index_name,
-            '_type': self.settings['ELASTICSEARCH_TYPE'],
-            '_source': dict(**item, **{'timestamp': datetime.now()})
-        }
+        item_type = self.settings['ELASTICSEARCH_TYPE']
+        item_dict = dict(**item, **{'timestamp': datetime.now()})
+
+        if self.settings['ELASTICSEARCH_MERGE'] == True:
+            index_action = {
+                '_op_type': 'update',
+                '_index': index_name,
+                '_type': item_type,
+                'doc': item_dict,
+                'upsert': item_dict
+            }
+        else:
+            index_action = {
+                '_index': index_name,
+                '_type': item_type,
+                '_source': item_dict
+            }
 
         if self.settings['ELASTICSEARCH_UNIQ_KEY'] is not None:
             item_id = self.get_id(item)
