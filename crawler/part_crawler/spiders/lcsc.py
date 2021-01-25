@@ -33,6 +33,7 @@ class LcscSpider(scrapy.Spider):
             es,
             query={"query": {"match_all": {}}},
             index=f"{self.settings['ELASTICSEARCH_INDEX']}-*",
+            scroll="60m"
         )
 
         for r in results:
